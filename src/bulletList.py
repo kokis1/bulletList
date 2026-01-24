@@ -119,7 +119,7 @@ def read_tasks(active_file: str) -> list[task]:
       lines = file.readlines()
       lines = [line.strip("\n") for line in lines]
    if lines.pop(0) != "bulletList File":
-      print("Incorrect file format, exiting")
+      print("Incorrect file format, exiting try again.")
       exit()
    tasks = parse_tasks(lines)
    return tasks

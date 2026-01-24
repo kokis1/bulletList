@@ -40,3 +40,8 @@ expand - expand on certain lists items by index:
    all separated by a space
 
 help - display this full list of COMMANDS
+
+
+
+TODO:
+   make the date parse on entry
