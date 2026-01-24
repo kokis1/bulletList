@@ -21,7 +21,7 @@ def get_recent_files(path):
       file_line = False # toggles on and then off when the files are there or not
       for line in file.readlines():
          line = line.strip("\n")
-         if line == "end of files":
+         if line == "files ended":
             file_line = False
          if file_line:
             recent_files.append(line)
@@ -57,10 +57,10 @@ def update_metadata(path: str, active_file: str) -> None:
    for line in lines:
       if files_ended:
          lines_kept.append(line)
-      if line == "end of files":
+      if line == "files ended":
          files_ended = False
    
-   lines_to_write = ["files"] + recent_files + ["end of files"] + lines_kept
+   lines_to_write = ["files"] + recent_files + ["files ended"] + lines_kept
    
    # makes sure each line has a newline character
    lines_to_write = [line + "\n" for line in lines_to_write]
