@@ -67,29 +67,51 @@ def update_metadata(path: str, active_file: str) -> None:
    with open(path, mode="w") as file:
       file.writelines(lines_to_write)
    
-   
+def parse_input() -> list[str]:
+   '''parses the input into its constituent words'''
+   response = input("> ").split(" ")
+   return response
+
+def get_default(path: str) -> str:
+   with open(path, mode="r") as file:
+      lines = file.readlines()
+      lines = [line.strip("\n") for line in lines]
+   default_reached = False
+   default = []
+   for line in lines:
+      if line == "default ended":
+         default_reached = False
+      if default_reached:
+         default.append(line)
+      if line == "default":
+         default_reached = True
+   return default[0]
 
 def open_file(metadata_path: str) -> str:
-   '''tales user input to either open a new file or re-open an old one'''
+   '''takes user input to either open a new file or re-open an old one'''
    active_file = ""
    while not valid_path(active_file):
       print("Valid file not selected yet:")
       print(22*".")
-      response = input("Open a new file? [y/n/q] ")
-      if response == "y":
-         print("File location:")
-         response = input("> ")
-         write_new_file(response)
-      elif response == "n":
-         print("recently opened files:")
-         print(22*".")
-         recent_files = get_recent_files(metadata_path)
-         for file in recent_files:
-            print(file)
-         print(22*".")
-         response = input("File location: ")
-      elif response == "q":
-         exit()
+      response = input("Open a new file? [y/n/d/q] ")
+      match response:
+         case "y":
+            print("File location:")
+            response = input("> ")
+            write_new_file(response)
+         
+         case "n":
+            print("recently opened files:")
+            print(22*".")
+            recent_files = get_recent_files(metadata_path)
+            for file in recent_files:
+               print(file)
+            print(22*".")
+            response = input("File location: ")
+         case "q":
+            exit()
+         case "d":
+            response = get_default(metadata_path)
       active_file = response
    print(" ")
    print("     Valid: Opening file")
@@ -177,11 +199,6 @@ def print_tasks(tasks: list[task], response: list[str] = []) -> None:
       description = pad_string(tasks[i].description, 11)
       duedate = pad_string(tasks[i].duedate, 8)
       print(index, "   |   ", description, "  |  ", duedate, " |  ", tasks[i].tag, sep="")
-
-def parse_input() -> list[str]:
-   '''parses the input into its constituent words'''
-   response = input("> ").split(" ")
-   return response
 
 def get_new_tasks(tasks: list[task], response: list[str]) -> list[task]:
    '''inserts the new task into the front of the task queue''' 
