@@ -5,6 +5,9 @@ class task:
       self.description = description
       self.duedate = duedate
       self.tag = tag
+   def check_empty(self) -> bool:
+      return(self.description == "EMPTY" and self.duedate=="EMPTY" and self.tag == "EMPTY")
+
 
 
 
@@ -111,32 +114,58 @@ def get_new_tasks(tasks: list[task], response: list[str]) -> list[task]:
       print("Unable to parse input: too many arguments. 3 needed")
    elif len(new_response) < 3:
       print("Unable to parse input: not enough arguments. 3 needed")
-   new_task = task(new_response[0], new_response[1], new_response[2])
-   tasks.insert(0, new_task)
+   else:
+      new_task = task(new_response[0], new_response[1], new_response[2])
+      tasks.insert(0, new_task)
+      return tasks
    return tasks
-   
 
-def command_line_loop(tasks: list[task]) -> list[task]:
-   current_tasks = tasks
+def complete_task(tasks: list[task], response: list[str]) -> list[task]:
+   '''completed the task at the given index'''
+   if response.pop(0) != "complete":
+      return tasks
+   for argument in response:
+      if not argument.isdigit():
+         print(argument, "is not a number")
+         continue
+      index = int(argument)
+      if len(tasks) > index:
+         print("Not enough tasks: index", index, "is too big")
+         continue
+      tasks.pop(index-1)
+      print("Removing task", index)
+   return tasks
+
+def save_check(active_file: str, current_tasks: list[task]) -> bool:
+   '''returns true if the current list of tasks is the same as the ones saved already'''
+   cached_tasks = read_tasks(active_file)
+   return cached_tasks == current_tasks
+
+def command_line_loop(active_file: str) -> None:
+   current_tasks = read_tasks(active_file)
    print_tasks(current_tasks)
    while True:
       response = parse_input()
       match response[0]:
          case "q":
-            break
+            
+            # checks that the current file is up to date, otherwise the user can go back.
+            if save_check(active_file, current_tasks):
+               break
+            if input("File is not saved, continue? [y/n] ") == "y":
+               break
+            continue
          case "h":
             ...
          case "list":
             print_tasks(current_tasks, response)
          case "new":
-            current_tasks = get_new_tasks(tasks, response)
+            current_tasks = get_new_tasks(current_tasks, response)
             print_tasks(current_tasks)
          case "complete":
             ...
          case "save":
             ...
-   
-   return current_tasks
 
 def parse_tasks(lines: list[str]) -> list[task]:
    tasks = []
@@ -170,7 +199,7 @@ def main():
       exit()
    active_file = open_file(metadata_path)
    tasks = read_tasks(active_file)
-   tasks = command_line_loop(tasks)
+   command_line_loop(active_file)
    update_metadata(metadata_path, active_file)
    print("Exiting. Thank you for using bulletList!")
    exit()
