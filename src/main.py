@@ -153,13 +153,14 @@ def parse_tasks(lines: list[str]) -> list[task]:
    return tasks
 
 def read_tasks(active_file: str) -> list[task]:
+   '''reads the file and returns a list of the tasks that they make up'''
    with open(active_file, mode="r") as file:
       lines = file.readlines()
       lines = [line.strip("\n") for line in lines]
-   if lines[0] != "bulletList File":
+   if lines.pop(0) != "bulletList File":
       print("File is corrupted, unreadable")
       exit()
-   tasks = parse_tasks(lines[0:])
+   tasks = parse_tasks(lines)
    return tasks
 
 def main():
