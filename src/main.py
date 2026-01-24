@@ -126,7 +126,21 @@ def order_date_descending(tasks: list[task]) -> list[task]:
 
 def order_tag(tasks: list[task]) -> list[task]:
    '''re-orders the list of tasks into groups of tags'''
-   return tasks
+
+   # gets all the unique tags
+   unique_tags = set([task_instance.tag for task_instance in tasks])
+   
+   # re-orders the list based on these groupings
+   new_task_list = []
+   for unique_tag in unique_tags:
+      for task_instance in tasks:
+         if task_instance.tag == unique_tag:
+            new_task_list.append(task_instance)
+   if len(new_task_list) != len(tasks):
+      print(f"Error: new list isn't the same length as old list: new={len(tasks)} old={len(new_task_list)}")
+      return tasks
+   return new_task_list
+
 def print_tasks(tasks: list[task], response: list[str] = []) -> None:
    '''prints a list of all the tags, padded to keep everything in line
       flags:
@@ -206,6 +220,23 @@ def save(active_file: str, current_tasks: list[task]) -> None:
    lines_to_write = [line + "\n" for line in lines_to_write]
    with open(active_file, mode="w") as file:
       file.writelines(lines_to_write)
+
+def expand_tasks(tasks: list[task], response: list[str]) -> None:
+   '''goes into depth for the task indicies specified'''
+   if response.pop(0) != "expand":
+      return
+   for argument in response:
+      if not argument.isdigit():
+         print("Non numerical found..skipping")
+      index = int(argument)
+      if len(tasks) < index-1:
+         print("Not enough tasks: index", index, "is too big")
+      task_instance = tasks[index-1]
+      print(f"Description: {task_instance.description}")
+      print(f"Due Date: {task_instance.duedate}")
+      print(f"tag: {task_instance.tag}")
+      print(46*".")
+   
    
 def command_line_loop(active_file: str) -> None:
    current_tasks = read_tasks(active_file)
@@ -234,6 +265,8 @@ def command_line_loop(active_file: str) -> None:
          case "save":
             save(active_file, current_tasks)
             print("Saved current tasks")
+         case "expand":
+            expand_tasks(current_tasks, response)
 
 def main():
    metadata_path = "./metadata.txt"
