@@ -157,7 +157,7 @@ def order_tag(tasks: list[task]) -> list[task]:
 def print_tasks(tasks: list[task], response: list[str] = []) -> None:
    '''prints a list of all the tags, padded to keep everything in line
       flags:
-         urgent: lists in descending order of soonest due date
+         date: lists in descending order of soonest due date
          tag: lists all the tasks by tag'''
    print(20*" ", "Tasks")
    print(46*".")
@@ -199,7 +199,7 @@ def get_new_tasks(tasks: list[task], response: list[str]) -> list[task]:
    return tasks
 
 def complete_tasks(tasks: list[task], response: list[str]) -> list[task]:
-   '''completed the task at the given index'''
+   '''removes all the tasks from the given index, checking that they are valid indicies first'''
    empty_task = task("EMPTY", "EMPTY", "EMPTY")
    if response.pop(0) != "complete":
       return tasks
@@ -227,7 +227,7 @@ def save_check(active_file: str, current_tasks: list[task]) -> bool:
    return True
 
 def save(active_file: str, current_tasks: list[task]) -> None:
-   '''saves all the current tasks to a file'''
+   '''saves all the current tasks to the current working file'''
    lines_to_write = [str(current_task) for current_task in current_tasks]
    lines_to_write.insert(0, "bulletList File")
    lines_to_write = [line + "\n" for line in lines_to_write]
@@ -251,6 +251,7 @@ def expand_tasks(tasks: list[task], response: list[str]) -> None:
       print(46*".")
    
 def help(metadata_file: str) -> None:
+   '''displays the help message read from the metadata file'''
    with open(metadata_file, mode="r") as file:
       lines = file.readlines()
       lines = [line.strip("\n") for line in lines]
