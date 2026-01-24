@@ -41,6 +41,7 @@ def valid_path(path: str) -> bool:
    return os.path.exists(path) and os.path.isfile(path)
 
 def update_metadata(path: str, active_file: str) -> None:
+   '''updates the metadata file with the top 4 most recently stored files'''
    recent_files = get_recent_files(path)
    if active_file in recent_files:
       return
@@ -48,8 +49,20 @@ def update_metadata(path: str, active_file: str) -> None:
    if len(recent_files) > 4:
       recent_files = recent_files[:4] # makes sure there are at most 4 recent files
    
+   with open(path, mode="r") as file:
+      lines = file.readlines()
+      lines = [line.strip("\n") for line in lines]
+   
+   lines_kept = []
+   files_ended = False
+   for line in lines:
+      if files_ended:
+         lines_kept.append(line)
+      if line == "end of files":
+         files_ended = False
+   
    # makes sure each line has a newline character
-   lines_to_write = ["files"] + recent_files + ["end of files"]
+   lines_to_write = ["files"] + recent_files + ["end of files"] + lines_kept
    lines_to_write = [line + "\n" for line in lines_to_write]
    with open(path, mode="w") as file:
       file.writelines(lines_to_write)
@@ -238,14 +251,15 @@ def expand_tasks(tasks: list[task], response: list[str]) -> None:
       print(46*".")
    
 def help(metadata_file: str) -> None:
-   with open(metadata_file, mode="w") as file:
+   with open(metadata_file, mode="r") as file:
       lines = file.readlines()
       lines = [line.strip("\n") for line in lines]
    help_reached = False
    for line in lines:
       if line == "help ended":
          help_reached = False
-      print(line)
+      if help_reached:
+         print(line)
       if line == "help":
          help_reached = True
 
@@ -263,8 +277,8 @@ def command_line_loop(active_file: str, metadata_file: str) -> None:
             elif input("File is not saved, continue? [y/n] ") == "y":
                break
             continue
-         case "h":
-            ...
+         case "help":
+            help(metadata_file)
          case "list":
             print_tasks(current_tasks, response)
          case "new":
