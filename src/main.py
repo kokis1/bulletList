@@ -237,8 +237,19 @@ def expand_tasks(tasks: list[task], response: list[str]) -> None:
       print(f"tag: {task_instance.tag}")
       print(46*".")
    
-   
-def command_line_loop(active_file: str) -> None:
+def help(metadata_file: str) -> None:
+   with open(metadata_file, mode="w") as file:
+      lines = file.readlines()
+      lines = [line.strip("\n") for line in lines]
+   help_reached = False
+   for line in lines:
+      if line == "help ended":
+         help_reached = False
+      print(line)
+      if line == "help":
+         help_reached = True
+
+def command_line_loop(active_file: str, metadata_file: str) -> None:
    current_tasks = read_tasks(active_file)
    print_tasks(current_tasks)
    while True:
@@ -274,7 +285,7 @@ def main():
       print("No metadata found, can't run!")
       exit()
    active_file = open_file(metadata_path)
-   command_line_loop(active_file)
+   command_line_loop(active_file, metadata_path)
    update_metadata(metadata_path, active_file)
    print("Exiting. Thank you for using bulletList!")
    exit()
