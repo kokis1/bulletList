@@ -8,7 +8,9 @@ class task:
    def check_empty(self) -> bool:
       return(self.description == "EMPTY" and self.duedate=="EMPTY" and self.tag == "EMPTY")
    def __str__(self) -> str:
-      return f"task|{self.description}|{self.duedate}|{self.tag}"
+      return f"task  |{self.description}|{self.duedate}|{self.tag}"
+   def __repr__(self) -> str:
+      return self.__str__()
 
 
 
@@ -57,6 +59,7 @@ def open_file(metadata_path: str) -> str:
    active_file = ""
    while not valid_path(active_file):
       print("Valid file not selected yet:")
+      print(22*".")
       response = input("Open a new file? [y/n/q] ")
       if response == "y":
          print("File location:")
@@ -64,9 +67,11 @@ def open_file(metadata_path: str) -> str:
          write_new_file(response)
       elif response == "n":
          print("recently opened files:")
+         print(22*".")
          recent_files = get_recent_files(metadata_path)
          for file in recent_files:
             print(file)
+         print(22*".")
          response = input("File location: ")
       elif response == "q":
          exit()
@@ -79,13 +84,28 @@ def open_file(metadata_path: str) -> str:
    print(" ")
    return active_file
 
+def parse_tasks(lines: list[str]) -> list[task]:
+   '''takes a list of file lines and parses them into a list of task objects'''
+   tasks = []
+   for line in lines:
+      # splits each line into words and removes spaces after the end
+      line = line.split("|")
+      line = [word.strip() for word in line]
+      if line[0].strip(" ") != "task":
+         continue
+      descr = line[1]
+      duedate = line[2]
+      tag = line[3]
+      tasks.append(task(descr, duedate, tag))
+   return tasks
+
 def read_tasks(active_file: str) -> list[task]:
    '''reads the file and returns a list of the tasks that they make up'''
    with open(active_file, mode="r") as file:
       lines = file.readlines()
       lines = [line.strip("\n") for line in lines]
    if lines.pop(0) != "bulletList File":
-      print("File is corrupted, unreadable")
+      print("Incorrect file format, exiting")
       exit()
    tasks = parse_tasks(lines)
    return tasks
@@ -113,11 +133,12 @@ def print_tasks(tasks: list[task], flag: list[str] = []) -> None:
       print(index, "   |   ", description, "  |  ", duedate, " |  ", tasks[i].tag, sep="")
 
 def parse_input() -> list[str]:
+   '''parses the input into its constituent words'''
    response = input("> ").split(" ")
    return response
 
 def get_new_tasks(tasks: list[task], response: list[str]) -> list[task]:
-   # inserts the new task into the front of the task queue 
+   '''inserts the new task into the front of the task queue''' 
    
    # checks that the keyword is indeed new, removes from the front of the list
    if response.pop(0) != "new":
@@ -130,7 +151,6 @@ def get_new_tasks(tasks: list[task], response: list[str]) -> list[task]:
    else:
       new_task = task(new_response[0], new_response[1], new_response[2])
       tasks.insert(0, new_task)
-      return tasks
    return tasks
 
 def complete_tasks(tasks: list[task], response: list[str]) -> list[task]:
@@ -154,7 +174,12 @@ def complete_tasks(tasks: list[task], response: list[str]) -> list[task]:
 def save_check(active_file: str, current_tasks: list[task]) -> bool:
    '''returns true if the current list of tasks is the same as the ones saved already'''
    cached_tasks = read_tasks(active_file)
-   return cached_tasks == current_tasks
+   for current_task, cached_task in zip(cached_tasks, current_tasks):
+      if not(current_task.description == cached_task.description
+             and current_task.duedate == cached_task.duedate
+             and current_task.tag == cached_task.tag):
+         return False
+      return True
 
 def save(active_file: str, current_tasks: list[task]) -> None:
    '''saves all the current tasks to a file'''
@@ -175,7 +200,7 @@ def command_line_loop(active_file: str) -> None:
             # checks that the current file is up to date, otherwise the user can go back.
             if save_check(active_file, current_tasks):
                break
-            if input("File is not saved, continue? [y/n] ") == "y":
+            elif input("File is not saved, continue? [y/n] ") == "y":
                break
             continue
          case "h":
@@ -192,27 +217,12 @@ def command_line_loop(active_file: str) -> None:
             save(active_file, current_tasks)
             print("Saved current tasks")
 
-def parse_tasks(lines: list[str]) -> list[task]:
-   tasks = []
-   for line in lines:
-      # splits each line into words and removes spaces after the end
-      line = line.split("|")
-      line = [word.strip() for word in line]
-      if line[0] != "task":
-         continue
-      descr = line[1]
-      duedate = line[2]
-      tag = line[3]
-      tasks.append(task(descr, duedate, tag))
-   return tasks
-
 def main():
    metadata_path = "./metadata.txt"
    if not valid_path(metadata_path):
       print("No metadata found, can't run!")
       exit()
    active_file = open_file(metadata_path)
-   tasks = read_tasks(active_file)
    command_line_loop(active_file)
    update_metadata(metadata_path, active_file)
    print("Exiting. Thank you for using bulletList!")
