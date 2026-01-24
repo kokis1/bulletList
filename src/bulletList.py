@@ -58,7 +58,7 @@ def update_metadata(path: str, active_file: str) -> None:
       if files_ended:
          lines_kept.append(line)
       if line == "files ended":
-         files_ended = False
+         files_ended = True
    
    lines_to_write = ["files"] + recent_files + ["files ended"] + lines_kept
    

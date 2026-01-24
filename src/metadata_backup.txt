@@ -2,8 +2,11 @@ files
 example.txt
 first.txt
 hello_world.txt
-end of files
+files ended
 
+default
+tasks.txt
+default ended
 
 help
 HELP SECTION - LIST OF COMMANDS:
