@@ -179,7 +179,7 @@ def save_check(active_file: str, current_tasks: list[task]) -> bool:
              and current_task.duedate == cached_task.duedate
              and current_task.tag == cached_task.tag):
          return False
-      return True
+   return True
 
 def save(active_file: str, current_tasks: list[task]) -> None:
    '''saves all the current tasks to a file'''
