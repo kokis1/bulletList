@@ -14,8 +14,6 @@ class task:
       return self.__str__()
 
 
-
-
 def get_recent_files(path):
    '''return a list of the recently opened bulletList save files, using the metadata file'''
    with open(path, mode="r") as file:
@@ -53,6 +51,7 @@ def update_metadata(path: str, active_file: str) -> None:
       lines = file.readlines()
       lines = [line.strip("\n") for line in lines]
    
+   # keeps the lines that have useful information
    lines_kept = []
    files_ended = False
    for line in lines:
@@ -61,8 +60,9 @@ def update_metadata(path: str, active_file: str) -> None:
       if line == "end of files":
          files_ended = False
    
-   # makes sure each line has a newline character
    lines_to_write = ["files"] + recent_files + ["end of files"] + lines_kept
+   
+   # makes sure each line has a newline character
    lines_to_write = [line + "\n" for line in lines_to_write]
    with open(path, mode="w") as file:
       file.writelines(lines_to_write)
@@ -70,6 +70,7 @@ def update_metadata(path: str, active_file: str) -> None:
    
 
 def open_file(metadata_path: str) -> str:
+   '''tales user input to either open a new file or re-open an old one'''
    active_file = ""
    while not valid_path(active_file):
       print("Valid file not selected yet:")
@@ -265,6 +266,7 @@ def help(metadata_file: str) -> None:
          help_reached = True
 
 def command_line_loop(active_file: str, metadata_file: str) -> None:
+   '''main loop that controls the flow of the program once a file is selected'''
    current_tasks = read_tasks(active_file)
    print_tasks(current_tasks)
    while True:
@@ -302,7 +304,9 @@ def main():
    active_file = open_file(metadata_path)
    command_line_loop(active_file, metadata_path)
    update_metadata(metadata_path, active_file)
+   print("")
    print("Exiting. Thank you for using bulletList!")
+   print("Credits: Reuben Stannah")
    exit()
 if __name__ == "__main__":
    main()
