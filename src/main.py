@@ -7,6 +7,8 @@ class task:
       self.tag = tag
    def check_empty(self) -> bool:
       return(self.description == "EMPTY" and self.duedate=="EMPTY" and self.tag == "EMPTY")
+   def __str__(self) -> str:
+      return f"task|{self.description}|{self.duedate}|{self.tag}"
 
 
 
@@ -122,6 +124,7 @@ def get_new_tasks(tasks: list[task], response: list[str]) -> list[task]:
 
 def complete_tasks(tasks: list[task], response: list[str]) -> list[task]:
    '''completed the task at the given index'''
+   empty_task = task("EMPTY", "EMPTY", "EMPTY")
    if response.pop(0) != "complete":
       return tasks
    for argument in response:
@@ -132,12 +135,9 @@ def complete_tasks(tasks: list[task], response: list[str]) -> list[task]:
       if len(tasks) < index-1:
          print("Not enough tasks: index", index, "is too big")
          continue
-      tasks[index-1] = task("EMPTY", "EMPTY", "EMPTY")
-      print("Removing task", index)
-   print(tasks)
-   while tasks.count(task("EMPTY", "EMPTY", "EMPTY")) > 0:
-      tasks.remove(task("EMPTY", "EMPTY", "EMPTY"))
-      print(tasks)
+      tasks[index-1] = empty_task
+      print("Completed task", index, "Removing")
+   tasks = [task_instance for task_instance in tasks if task_instance != empty_task]
    return tasks
 
 def save_check(active_file: str, current_tasks: list[task]) -> bool:
@@ -145,6 +145,13 @@ def save_check(active_file: str, current_tasks: list[task]) -> bool:
    cached_tasks = read_tasks(active_file)
    return cached_tasks == current_tasks
 
+def save(active_file: str, current_tasks: list[task]) -> None:
+   '''saves all the current tasks to a file'''
+   lines_to_write = [str(current_task) for current_task in current_tasks]
+   lines_to_write.insert(0, "bulletList File")
+   with open(active_file, mode="w") as file:
+      file.writelines(lines_to_write)
+   
 def command_line_loop(active_file: str) -> None:
    current_tasks = read_tasks(active_file)
    print_tasks(current_tasks)
@@ -170,7 +177,8 @@ def command_line_loop(active_file: str) -> None:
             current_tasks = complete_tasks(current_tasks, response)
             print_tasks(current_tasks)
          case "save":
-            ...
+            save(active_file, current_tasks)
+            print("Saved current tasks")
 
 def parse_tasks(lines: list[str]) -> list[task]:
    tasks = []
