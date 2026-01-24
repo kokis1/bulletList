@@ -1,4 +1,5 @@
 import os
+import time
 
 class task:
    def __init__(self, description, duedate, tag) -> None:
@@ -118,7 +119,15 @@ def pad_string(string: str, length: int) -> str:
    pad_length = length - len(string)
    return string + pad_length*" "
 
-def print_tasks(tasks: list[task], flag: list[str] = []) -> None:
+def order_date_descending(tasks: list[task]) -> list[task]:
+   '''re-orders the list of tasks by descending due date'''
+   tasks.sort(key=lambda tasks: time.strptime(tasks.duedate, "%d/%m/%Y"))
+   return tasks
+
+def order_tag(tasks: list[task]) -> list[task]:
+   '''re-orders the list of tasks into groups of tags'''
+   return tasks
+def print_tasks(tasks: list[task], response: list[str] = []) -> None:
    '''prints a list of all the tags, padded to keep everything in line
       flags:
          urgent: lists in descending order of soonest due date
@@ -126,6 +135,15 @@ def print_tasks(tasks: list[task], flag: list[str] = []) -> None:
    print(20*" ", "Tasks")
    print(46*".")
    print("Index   |  Description   |  Due Date |  Tag")
+   
+   # re-orders the list of tasks based on the optional flag
+   if len(response) > 1:
+      flag = response[1:] # makes sure only the flag is shown
+      match flag[0]:
+         case "date":
+            tasks = order_date_descending(tasks)
+         case "tag":
+            tasks = order_tag(tasks)
    for i in range(len(tasks)):
       index = pad_string(str(i+1), 5)
       description = pad_string(tasks[i].description, 11)
