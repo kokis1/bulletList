@@ -79,6 +79,17 @@ def open_file(metadata_path: str) -> str:
    print(" ")
    return active_file
 
+def read_tasks(active_file: str) -> list[task]:
+   '''reads the file and returns a list of the tasks that they make up'''
+   with open(active_file, mode="r") as file:
+      lines = file.readlines()
+      lines = [line.strip("\n") for line in lines]
+   if lines.pop(0) != "bulletList File":
+      print("File is corrupted, unreadable")
+      exit()
+   tasks = parse_tasks(lines)
+   return tasks
+
 def pad_string(string: str, length: int) -> str:
    '''ensures a string is the right length, pads to the right if too short
    truncates from the right if too long'''
@@ -149,6 +160,7 @@ def save(active_file: str, current_tasks: list[task]) -> None:
    '''saves all the current tasks to a file'''
    lines_to_write = [str(current_task) for current_task in current_tasks]
    lines_to_write.insert(0, "bulletList File")
+   lines_to_write = [line + "\n" for line in lines_to_write]
    with open(active_file, mode="w") as file:
       file.writelines(lines_to_write)
    
@@ -192,17 +204,6 @@ def parse_tasks(lines: list[str]) -> list[task]:
       duedate = line[2]
       tag = line[3]
       tasks.append(task(descr, duedate, tag))
-   return tasks
-
-def read_tasks(active_file: str) -> list[task]:
-   '''reads the file and returns a list of the tasks that they make up'''
-   with open(active_file, mode="r") as file:
-      lines = file.readlines()
-      lines = [line.strip("\n") for line in lines]
-   if lines.pop(0) != "bulletList File":
-      print("File is corrupted, unreadable")
-      exit()
-   tasks = parse_tasks(lines)
    return tasks
 
 def main():
