@@ -1,5 +1,3 @@
 files
-hello.py
-wassup.txt
-lets geaux!!
+hello_world.txt
 end of files
