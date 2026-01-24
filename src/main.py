@@ -120,7 +120,7 @@ def get_new_tasks(tasks: list[task], response: list[str]) -> list[task]:
       return tasks
    return tasks
 
-def complete_task(tasks: list[task], response: list[str]) -> list[task]:
+def complete_tasks(tasks: list[task], response: list[str]) -> list[task]:
    '''completed the task at the given index'''
    if response.pop(0) != "complete":
       return tasks
@@ -129,11 +129,15 @@ def complete_task(tasks: list[task], response: list[str]) -> list[task]:
          print(argument, "is not a number")
          continue
       index = int(argument)
-      if len(tasks) > index:
+      if len(tasks) < index-1:
          print("Not enough tasks: index", index, "is too big")
          continue
-      tasks.pop(index-1)
+      tasks[index-1] = task("EMPTY", "EMPTY", "EMPTY")
       print("Removing task", index)
+   print(tasks)
+   while tasks.count(task("EMPTY", "EMPTY", "EMPTY")) > 0:
+      tasks.remove(task("EMPTY", "EMPTY", "EMPTY"))
+      print(tasks)
    return tasks
 
 def save_check(active_file: str, current_tasks: list[task]) -> bool:
@@ -163,7 +167,8 @@ def command_line_loop(active_file: str) -> None:
             current_tasks = get_new_tasks(current_tasks, response)
             print_tasks(current_tasks)
          case "complete":
-            ...
+            current_tasks = complete_tasks(current_tasks, response)
+            print_tasks(current_tasks)
          case "save":
             ...
 
