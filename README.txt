@@ -45,4 +45,3 @@ help - display this full list of COMMANDS
 
 TODO:
    make the date parse on entry
-   get a default file path
