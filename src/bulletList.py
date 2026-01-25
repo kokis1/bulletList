@@ -155,9 +155,12 @@ def pad_string(string: str, length: int) -> str:
    return string + pad_length*" "
 
 def order_date_descending(tasks: list[task]) -> list[task]:
-   '''re-orders the list of tasks by descending due date'''
-   tasks.sort(key=lambda tasks: time.strptime(tasks.duedate, "%d/%m/%Y"))
-   return tasks
+   '''re-orders the list of tasks by descending due date
+   tasks with no date are added to the end of the list'''
+   no_dates = [task_instance for task_instance in tasks if task_instance.duedate == "///"]
+   with_dates = [task_instance for task_instance in tasks if task_instance.duedate != "///"]
+   with_dates.sort(key=lambda with_dates: time.strptime(with_dates.duedate, "%d/%m/%Y"))
+   return with_dates + no_dates
 
 def order_tag(tasks: list[task]) -> list[task]:
    '''re-orders the list of tasks into groups of tags'''
