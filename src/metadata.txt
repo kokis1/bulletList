@@ -20,7 +20,8 @@ new - add a new task
 
    DESCRIPTION|DATE/MONTH/YEAR|TAG
 
-   **note: the DATE is in days, MONTH is out of 12, YEAR is strictly 4 digit**
+   **note: the DATE is in days, MONTH is out of 12, YEAR is strictly 4 digit
+            If the task has no date leave it as "///" instead**
 
 
 complete - complete tasks and remove them from the list:
