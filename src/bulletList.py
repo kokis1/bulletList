@@ -233,11 +233,12 @@ def get_new_tasks(tasks: list[task], response: list[str]) -> list[task]:
       print("Unable to parse input: too many arguments. 3 needed")
    elif len(new_response) < 3:
       print("Unable to parse input: not enough arguments. 3 needed")
-   if not parse_date(new_response[1]):
+   if parse_date(new_response[1]):
+      new_task = task(new_response[0], new_response[1], new_response[2])
+      tasks.append(new_task)
+   else:
       print("Date argument is not in the correct formtat.")
       print("See help for correct usage")
-   new_task = task(new_response[0], new_response[1], new_response[2])
-   tasks.append(new_task)
    return tasks
 
 def complete_tasks(tasks: list[task], response: list[str]) -> list[task]:
