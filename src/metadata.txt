@@ -34,6 +34,9 @@ complete - complete tasks and remove them from the list:
 
 save - save the list of tasks to the current active file
 
+q - quit this application:
+   If the file hasn't been saved the user will be prompted to do so
+
 expand - expand on certain lists items by index:
    after typing "expand" type the index of the tasks you want to expand
    all separated by a space
