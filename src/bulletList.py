@@ -212,7 +212,7 @@ def get_new_tasks(tasks: list[task], response: list[str]) -> list[task]:
       print("Unable to parse input: not enough arguments. 3 needed")
    else:
       new_task = task(new_response[0], new_response[1], new_response[2])
-      tasks.insert(0, new_task)
+      tasks.append(new_task)
    return tasks
 
 def complete_tasks(tasks: list[task], response: list[str]) -> list[task]:

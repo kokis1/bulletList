@@ -1,1 +1,3 @@
 bulletList File
+task  |D’Alambert’s method example sheet|///|EMat
+task  |D’Alambert’s method videos|///|EMat
