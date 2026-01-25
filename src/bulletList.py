@@ -99,7 +99,6 @@ def open_file(metadata_path: str) -> str:
             print("File location:")
             response = input("> ")
             write_new_file(response)
-         
          case "n":
             print("recently opened files:")
             print(22*".")
@@ -237,6 +236,8 @@ def complete_tasks(tasks: list[task], response: list[str]) -> list[task]:
 def save_check(active_file: str, current_tasks: list[task]) -> bool:
    '''returns true if the current list of tasks is the same as the ones saved already'''
    cached_tasks = read_tasks(active_file)
+   if cached_tasks == [] and current_tasks != []:
+      return False
    for current_task, cached_task in zip(cached_tasks, current_tasks):
       if not(current_task.description == cached_task.description
              and current_task.duedate == cached_task.duedate
@@ -290,7 +291,6 @@ def command_line_loop(active_file: str, metadata_file: str) -> None:
       response = parse_input()
       match response[0]:
          case "q":
-            
             # checks that the current file is up to date, otherwise the user can go back.
             if save_check(active_file, current_tasks):
                break
