@@ -199,6 +199,29 @@ def print_tasks(tasks: list[task], response: list[str] = []) -> None:
       duedate = pad_string(tasks[i].duedate, 8)
       print(index, "   |   ", description, "  |  ", duedate, " |  ", tasks[i].tag, sep="")
 
+def parse_date(date: str) -> bool:
+   '''checks that the date is in the correct format'''
+   date_list = date.split("/")
+
+   # checks the date is of three parts
+   if len(date_list) != 3:
+      return False
+   
+   # checks the date is only numbers
+   for date_part in date_list:
+      if not date_part.isdigit():
+         return False
+   
+   # checks the dates are the correct length
+   if len(date_list[0]) > 2:
+      return False
+   if len(date_list[1]) > 2:
+      return False
+   if len(date_list) != 4:
+      return False
+   
+   return True
+
 def get_new_tasks(tasks: list[task], response: list[str]) -> list[task]:
    '''inserts the new task into the front of the task queue''' 
    
@@ -210,9 +233,11 @@ def get_new_tasks(tasks: list[task], response: list[str]) -> list[task]:
       print("Unable to parse input: too many arguments. 3 needed")
    elif len(new_response) < 3:
       print("Unable to parse input: not enough arguments. 3 needed")
-   else:
-      new_task = task(new_response[0], new_response[1], new_response[2])
-      tasks.append(new_task)
+   if not parse_date(new_response[1]):
+      print("Date argument is not in the correct formtat.")
+      print("See help for correct usage")
+   new_task = task(new_response[0], new_response[1], new_response[2])
+   tasks.append(new_task)
    return tasks
 
 def complete_tasks(tasks: list[task], response: list[str]) -> list[task]:
