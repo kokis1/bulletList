@@ -348,7 +348,7 @@ def command_line_loop(active_file: str, metadata_file: str) -> None:
             expand_tasks(current_tasks, response)
 
 def main():
-   metadata_path = "./metadata.txt"
+   metadata_path = "./_internal/metadata.txt"
    if not valid_path(metadata_path):
       print("No metadata found, can't run!")
       exit()
