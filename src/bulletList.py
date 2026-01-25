@@ -224,7 +224,7 @@ def parse_date(date: str) -> bool:
       return False
    if len(date_list[1]) > 2:
       return False
-   if len(date_list) != 4:
+   if len(date_list[2]) != 4:
       return False
    
    return True
