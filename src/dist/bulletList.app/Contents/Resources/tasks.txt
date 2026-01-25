@@ -1,3 +1,0 @@
-bulletList File
-task  |D’Alambert’s method videos|///|EMat
-task  |Separation of variables worksheet|///|EMat

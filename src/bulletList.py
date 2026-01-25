@@ -346,9 +346,12 @@ def command_line_loop(active_file: str, metadata_file: str) -> None:
             print("Saved current tasks")
          case "expand":
             expand_tasks(current_tasks, response)
+         case _:
+            print("Unrecognised Command")
+            help(metadata_file)
 
 def main():
-   metadata_path = "./_internal/metadata.txt"
+   metadata_path = "./metadata.txt"
    if not valid_path(metadata_path):
       print("No metadata found, can't run!")
       exit()

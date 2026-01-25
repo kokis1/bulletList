@@ -1,3 +1,9 @@
 bulletList File
 task  |D’Alambert’s method videos|///|EMat
-task  |Separation of variables worksheet|///|EMat
+task  |D’Alambert’s method example sheet|///|EMat
+task  |Methods of AI lecture slides|///|MAI
+task  |PCM lecture slides|///|PCM
+task  |PCM further material and worksheet|///|PCM
+task  |Look for house|///|HouseFinding
+task  |find an exercise|///|Home
+task  |find internship|///|Home

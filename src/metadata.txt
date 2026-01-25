@@ -1,9 +1,9 @@
 files
-.._internal/tasks.txt
+tasks.txt
 files ended
 
 default
-../_internal/tasks.txt
+tasks.txt
 default ended
 
 help
