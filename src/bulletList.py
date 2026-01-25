@@ -201,6 +201,10 @@ def print_tasks(tasks: list[task], response: list[str] = []) -> None:
 
 def parse_date(date: str) -> bool:
    '''checks that the date is in the correct format'''
+   
+   if date == "///":
+      return True
+   
    date_list = date.split("/")
 
    # checks the date is of three parts
