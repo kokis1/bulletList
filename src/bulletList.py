@@ -264,6 +264,7 @@ def expand_tasks(tasks: list[task], response: list[str]) -> None:
       if len(tasks) < index-1:
          print("Not enough tasks: index", index, "is too big")
       task_instance = tasks[index-1]
+      print(f"Task: {index}")
       print(f"Description: {task_instance.description}")
       print(f"Due Date: {task_instance.duedate}")
       print(f"tag: {task_instance.tag}")
