@@ -101,7 +101,7 @@ def tokeniser(text: list[str], keywords: list[str]) -> list[tok]:
 
 def parse(tokens: list[tok]) -> node:
    root = node(None, tok("ROOT", 0), [])
-   
+   return root
 
 
 def main():
