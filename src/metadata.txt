@@ -1,4 +1,6 @@
 files
+SLAM.txt
+todoBulletList.txt
 tasks.txt
 files ended
 

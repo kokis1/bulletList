@@ -5,3 +5,6 @@ task  |Look for house|///|HouseFinding
 task  |find an exercise|///|Home
 task  |find internship|///|Home
 task  |Vector Calculus practice test|///|EMat
+task  |new PCM complete worksheets 2&3|1/2/2025|PCM
+task  |finish writing optimizer class|29/01/2025|SLAM
+task  |find a way to get test data for the optimiser|29/01/2025|SLAM

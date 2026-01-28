@@ -1,0 +1,11 @@
+bulletList File
+task  |get build system working|///|code
+task  |refactor to be cleaner|///|code
+task  |make proper file manager and terminal manager|///|code
+task  |clean up the github|///|code
+task  |get MIT license|///|code
+task  |think of better features|///|project
+task  |think of a better language|///|project
+task  |make proper unit tests|///|code
+task  |save the list in its current form always|///|issue
+task  |make a proper parser for terminal arguments|///|code

@@ -13,21 +13,20 @@ class task:
    def __repr__(self) -> str:
       return self.__str__()
 
-
-def get_recent_files(path):
-   '''return a list of the recently opened bulletList save files, using the metadata file'''
+def parse_metadata(path: str, keyword: str) -> list[str]:
+   '''parses the metadata provided and returns all lines within the relavant section'''
    with open(path, mode="r") as file:
-      recent_files = []
-      file_line = False # toggles on and then off when the files are there or not
+      lines = []
+      keyword_reached = False
       for line in file.readlines():
          line = line.strip("\n")
-         if line == "files ended":
-            file_line = False
-         if file_line:
-            recent_files.append(line)
-         if line == "files":
-            file_line = True
-   return recent_files
+         if line == keyword + "ended":
+            keyword_reached = False
+         if keyword_reached:
+            lines.append(line)
+         if line == keyword:
+            keyword_reached = True
+   return lines
 
 def write_new_file(path: str) -> None:
    '''opens a new file at the given path and writes a header'''
@@ -40,25 +39,14 @@ def valid_path(path: str) -> bool:
 
 def update_metadata(path: str, active_file: str) -> None:
    '''updates the metadata file with the top 4 most recently stored files'''
-   recent_files = get_recent_files(path)
+   recent_files = parse_metadata(path, "files")
    if active_file in recent_files:
       return
    recent_files.insert(0, active_file)
-   if len(recent_files) > 4:
-      recent_files = recent_files[:4] # makes sure there are at most 4 recent files
-   
-   with open(path, mode="r") as file:
-      lines = file.readlines()
-      lines = [line.strip("\n") for line in lines]
+   recent_files = recent_files[:4] # makes sure there are at most 4 recent files
    
    # keeps the lines that have useful information
-   lines_kept = []
-   files_ended = False
-   for line in lines:
-      if files_ended:
-         lines_kept.append(line)
-      if line == "files ended":
-         files_ended = True
+   lines_kept = parse_metadata(path, "files ended")
    
    lines_to_write = ["files"] + recent_files + ["files ended"] + lines_kept
    
@@ -102,7 +90,7 @@ def open_file(metadata_path: str) -> str:
          case "n":
             print("recently opened files:")
             print(22*".")
-            recent_files = get_recent_files(metadata_path)
+            recent_files = parse_metadata(metadata_path, "files")
             for file in recent_files:
                print(file)
             print(22*".")
